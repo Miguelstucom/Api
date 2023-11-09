@@ -9,5 +9,5 @@ public interface RestaurantService {
 	List <Restaurant> retrieveUser();
 	boolean updateUser(Restaurant restaurant);
 	boolean deleteUser(int restaurant);
-	Restaurant retrieveUser(int restaurant);
+	Restaurant retrieveRestaurant(int restaurant);
 }

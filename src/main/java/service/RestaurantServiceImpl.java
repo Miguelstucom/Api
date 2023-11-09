@@ -37,9 +37,9 @@ public class RestaurantServiceImpl  implements RestaurantService {
 	}
 
 	@Override
-	public Restaurant retrieveUser(int restaurant) {
+	public Restaurant retrieveRestaurant(int id) {
 		// TODO Auto-generated method stub
-		return null;
+		return dao.retrieveRestaurant(id);
 	}
 
 }

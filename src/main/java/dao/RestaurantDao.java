@@ -9,4 +9,5 @@ import models.Restaurant;
 @Service
 public interface RestaurantDao {
 	List<Restaurant>getRestaurants();
+	Restaurant retrieveRestaurant(int idContacto);
 }
