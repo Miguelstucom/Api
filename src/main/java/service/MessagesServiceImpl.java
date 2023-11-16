@@ -5,24 +5,28 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import dao.MessagesDao;
 import dao.RestaurantDao;
+import models.Message;
 import models.Restaurant;
+
 @Service
-public class RestaurantServiceImpl  implements RestaurantService {
-
+public class MessagesServiceImpl implements MessagesService {
+	
 	@Autowired
-	RestaurantDao dao;
-
+	MessagesDao dao;
+	
+	
 	@Override
-	public List<Restaurant> retrieveRestaurant() {
+	public Message retrieveMessages(String name) {
 		// TODO Auto-generated method stub
-		return dao.getRestaurants();
+		return dao.retrieveMessages(name);
 	}
 
-	@Override
-	public Restaurant retrieveRestaurant(int id) {
-		// TODO Auto-generated method stub
-		return dao.retrieveRestaurant(id);
-	}
 
+	@Override
+	public List<Message> getMessages() {
+		// TODO Auto-generated method stub
+		return dao.getMessages();
+	}
 }

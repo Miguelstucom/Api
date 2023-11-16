@@ -5,9 +5,6 @@ import java.util.List;
 import models.Restaurant;
 
 public interface RestaurantService {
-	boolean addUser(Restaurant restaurant);
-	List <Restaurant> retrieveUser();
-	boolean updateUser(Restaurant restaurant);
-	boolean deleteUser(int restaurant);
+	List <Restaurant> retrieveRestaurant();
 	Restaurant retrieveRestaurant(int restaurant);
 }
