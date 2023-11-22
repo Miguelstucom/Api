@@ -25,4 +25,20 @@ public class RestaurantServiceImpl  implements RestaurantService {
 		return dao.retrieveRestaurant(id);
 	}
 
+	@Override
+	public boolean addRestaurant(Restaurant res) {
+		return dao.addRestaurant(res);
+	}
+
+	@Override
+	public void updateRestaurant(Restaurant res) {
+		dao.updateRestaurant(res);
+		
+	}
+
+	@Override
+	public boolean deleteRestaurant(int idRes) {
+		return dao.deleteRestaurant(idRes);
+	}
+
 }

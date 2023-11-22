@@ -8,6 +8,9 @@ import models.Restaurant;
 
 @Service
 public interface RestaurantDao {
+	boolean addRestaurant(Restaurant res);
+	void updateRestaurant(Restaurant res);
+	boolean deleteRestaurant(int idRes);
 	List<Restaurant>getRestaurants();
 	Restaurant retrieveRestaurant(int id);
 }
