@@ -9,5 +9,6 @@ public interface RestaurantService {
 	void updateRestaurant(Restaurant res);
 	boolean deleteRestaurant(int idRes);
 	List <Restaurant> retrieveRestaurant();
+	List <Restaurant> restaurantFiltered(String name);
 	Restaurant retrieveRestaurant(int restaurant);
 }
