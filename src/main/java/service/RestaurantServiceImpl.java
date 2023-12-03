@@ -20,6 +20,18 @@ public class RestaurantServiceImpl  implements RestaurantService {
 	}
 
 	@Override
+	public List<Restaurant> restaurantFiltered(String name){
+		List<Restaurant> restaurants = dao.getRestaurants();
+		List<Restaurant> restaurantsFilteret = new ArrayList<Restaurant>();
+		for(int x = 0; x < restaurants.size(); x++) {
+			if(restaurants.get(x).getName().contains(name.toLowerCase())){
+				restaurantsFilteret.add(restaurants.get(x));
+			}
+		}
+		return restaurantsFilteret;
+	}
+
+	@Override
 	public Restaurant retrieveRestaurant(int id) {
 		// TODO Auto-generated method stub
 		return dao.retrieveRestaurant(id);
