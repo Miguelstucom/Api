@@ -37,6 +37,11 @@ public class RestaurantController {
 	public List<Restaurant>retrieveUsers(){
 		return wsrestaurant.retrieveRestaurant();
 	}
+
+	@GetMapping(value="restaurant/name/{name}",produces=MediaType.APPLICATION_JSON_VALUE)
+	public List<Restaurant>searchRestaurant(@PathVariable("name") String name){
+		return wsrestaurant.restaurantFiltered(name);
+	}
 	
 	@GetMapping(value="restaurant/{id}",produces=MediaType.APPLICATION_JSON_VALUE)
 	public Restaurant retrieveRestaurant(@PathVariable("id") int id) {
