@@ -20,8 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import models.Message;
 import models.Restaurant;
+import models.User;
 import service.MessagesService;
 import service.RestaurantService;
+import service.UserService;
 
 
 @RestController
@@ -30,6 +32,8 @@ public class RestaurantController {
 	
 	@Autowired
 	RestaurantService wsrestaurant;
+	@Autowired
+	UserService user;
 	@Autowired
 	MessagesService message;
 	
@@ -57,6 +61,12 @@ public class RestaurantController {
 	public List<Message>getMessages(){
 		return message.getMessages();
 	}
+	
+	@GetMapping(value="user/{id}",produces=MediaType.APPLICATION_JSON_VALUE)
+	public User retrieveUser(@PathVariable("id") int id) {
+		return user.retrieveUser(id);
+	}
+	
 	
 	@PostMapping("/restaurant")
 	
