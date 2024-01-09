@@ -1,8 +1,6 @@
 package controller;
 
 import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -18,82 +16,61 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import models.Message;
-import models.Restaurant;
 import models.User;
-import service.MessagesService;
-import service.RestaurantService;
 import service.UserService;
-
 
 @RestController
 @RequestMapping("/api")
-public class RestaurantController {
+public class UserController {
 	
 	@Autowired
-	RestaurantService wsrestaurant;
+	UserService user;
 	
-	@GetMapping(value="restaurant",produces=MediaType.APPLICATION_JSON_VALUE)
-	public List<Restaurant>retrieveUsers(){
-		return wsrestaurant.retrieveRestaurant();
-	}
-
-	@GetMapping(value="restaurant/name/{name}",produces=MediaType.APPLICATION_JSON_VALUE)
-	public List<Restaurant>searchRestaurant(@PathVariable("name") String name){
-		return wsrestaurant.restaurantFiltered(name);
+	@GetMapping(value="user/{id}",produces=MediaType.APPLICATION_JSON_VALUE)
+	public User retrieveUser(@PathVariable("id") int id) {
+		return user.retrieveUser(id);
 	}
 	
-	@GetMapping(value="restaurant/{id}",produces=MediaType.APPLICATION_JSON_VALUE)
-	public Restaurant retrieveRestaurant(@PathVariable("id") int id) {
-		return wsrestaurant.retrieveRestaurant(id);
-	}
-	
-	@PostMapping("/restaurant")
-	
-	public ResponseEntity<?> create(@RequestBody Restaurant rest) {
-		Restaurant newRes = rest;
+	@PostMapping("/user")
+	public ResponseEntity<?> createUser(@RequestBody User newuser){
+		User usr = newuser;
 		java.util.Map<String, Object> response = new HashMap<>();
 		try {
-			wsrestaurant.addRestaurant(rest);
-			response.put("message", "El restaurante ha sido creado con éxito");
-			response.put("Usuario", newRes);
+			user.addUser(newuser);
+			response.put("message", "El usuario ha sido creado con éxito");
+			response.put("Usuario", usr);
 			return new ResponseEntity<java.util.Map<String, Object>>(response, HttpStatus.CREATED);
 		}
-		catch(DataAccessException e){
+		catch(DataAccessException e) {
 			response.put("message","Error");
 			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
 			return new ResponseEntity<java.util.Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+		
 	}
 	
-	@PutMapping(value = "/restaurant", consumes=MediaType.APPLICATION_JSON_VALUE)
-	
-	public ResponseEntity<?> update(@RequestBody Restaurant rest) {
+	@PutMapping(value = "/user", consumes=MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> updateUser(@RequestBody User updatedUser) {
 
-		Restaurant newRest = new Restaurant();
+		User newUser = new User();
 		java.util.Map<String, Object> response = new HashMap<>();		
 		
-		if(wsrestaurant.retrieveRestaurant(rest.getId())==null) {
-			response.put("mensaje", "Error: no se pudo editar, el Restaurant ID: " + rest.getId() + "no existe en la base de datos");
+		if(user.retrieveUser(updatedUser.getId())==null) {
+			response.put("mensaje", "Error: no se pudo editar, el User ID: " + updatedUser.getId() + "no existe en la base de datos");
 			return new ResponseEntity<java.util.Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);	
 		}
 		
-		wsrestaurant.updateRestaurant(rest);
+		user.updateUser(updatedUser);
 		
 		try {
-			newRest.setName(rest.getName());
-			newRest.setAddress(rest.getAddress());
-			newRest.setDescription(rest.getDescription());
-			newRest.setEmail(rest.getEmail());
-			newRest.setMedianprice(rest.getMedianprice());
-			newRest.setPhone(rest.getPhone());
-			newRest.setPhoto(rest.getPhoto());
-			newRest.setWebsite(rest.getWebsite());
-			newRest.setType(rest.getType());
-
-			wsrestaurant.updateRestaurant(rest);
-			response.put("message", "El restaurante ha sido actualizado con éxito");
-			response.put("Usuario", rest);
+			newUser.setName(updatedUser.getName());
+			newUser.setEmail(updatedUser.getEmail());
+			newUser.setPassword(updatedUser.getPassword());
+			newUser.setEmail(updatedUser.getEmail());
+			
+			user.updateUser(updatedUser);
+			response.put("message", "El usuario ha sido actualizado con éxito");
+			response.put("Usuario", updatedUser);
 			return new ResponseEntity<java.util.Map<String, Object>>(response, HttpStatus.CREATED);
 			
 		} catch(DataAccessException e) {
@@ -104,21 +81,19 @@ public class RestaurantController {
 		
 	}
 	
-	@DeleteMapping("/restaurant/{id}")
-	public ResponseEntity<?> delete(@PathVariable("id") int id) {
-		
+	@DeleteMapping("/user/{id}")
+	public ResponseEntity<?> deleteUser(@PathVariable("id") int id){
 		java.util.Map<String, Object> response = new HashMap<>();
-		Restaurant actualRes = wsrestaurant.retrieveRestaurant(id);
+		User actualUser = user.retrieveUser(id);
 		
-		if(actualRes==null) {
+		if(actualUser==null) {
 			response.put("message", "Error al eliminar, el usuario: " + id +" no existe en la base de datos");
 			return new ResponseEntity<java.util.Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);	
 		}
-		
 		try {
-			wsrestaurant.deleteRestaurant(id);
+			user.deleteUser(id);
 	
-			response.put("mensaje","El usuario " + actualRes.getName() + " ha sido eliminado con exito");
+			response.put("mensaje","El usuario " + actualUser.getName() + " ha sido eliminado con exito");
 			return new ResponseEntity<java.util.Map<String, Object>>(response, HttpStatus.CREATED);
 		}
 		catch(DataAccessException e) {
@@ -126,8 +101,6 @@ public class RestaurantController {
 			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
 			return new ResponseEntity<java.util.Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);	
 		}
-		
 	}
 
 }
-
