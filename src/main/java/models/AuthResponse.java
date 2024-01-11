@@ -4,7 +4,6 @@ public class AuthResponse {
     private String message;
     private User user;
 
-    // Constructor, getters, and setters
 
     public AuthResponse(String message, User user) {
         this.message = message;
