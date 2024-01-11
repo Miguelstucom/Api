@@ -15,7 +15,7 @@ public class AuthController {
     @Autowired
     private UserJpaSpring userRepository;
 
-    @PostMapping("/login")
+    @PostMapping("/api/login")
     public AuthResponse login(@RequestBody UserLoginRequest userLoginRequest) {
         String email = userLoginRequest.getEmail();
         String password = userLoginRequest.getPassword();
