@@ -23,9 +23,9 @@ public class AuthController {
         User user = userRepository.findByEmailAndPassword(email, password);
 
         if (user != null) {
-            return new AuthResponse("Login exitoso", user);
+            return new AuthResponse(user);
         } else {
-            return new AuthResponse("Credenciales inválidas", null);
+            return new AuthResponse(null);
         }
     }
 }
