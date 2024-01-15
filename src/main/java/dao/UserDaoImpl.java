@@ -18,11 +18,8 @@ public class UserDaoImpl implements UserDao {
 	
 	@Override
 	public boolean addUser(User res) {
-		if(user.findById(res.getId()) == null) {
 			user.save(res);
 			return true;
-		}
-		return false;
 	}
 	
 	@Override
