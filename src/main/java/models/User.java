@@ -2,16 +2,12 @@ package models;
 
 import java.io.Serializable;
 
-
 import org.hibernate.annotations.NamedQuery;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 
 
 /**
@@ -34,11 +30,6 @@ public class User implements Serializable {
 	private String password;
 
 	private String surname;
-
-	//bi-directional many-to-one association to Usertypeid
-	@ManyToOne(cascade={CascadeType.ALL})
-	@JoinColumn(name="type_id")
-	private Usertypeid usertypeid;
 
 	public User() {
 	}
@@ -81,14 +72,6 @@ public class User implements Serializable {
 
 	public void setSurname(String surname) {
 		this.surname = surname;
-	}
-
-	public Usertypeid getUsertypeid() {
-		return this.usertypeid;
-	}
-
-	public void setUsertypeid(Usertypeid usertypeid) {
-		this.usertypeid = usertypeid;
 	}
 
 }
