@@ -2,12 +2,16 @@ package models;
 
 import java.io.Serializable;
 
+import org.hibernate.annotations.NamedQuery;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
+
+import java.math.BigDecimal;
 
 
 /**
@@ -26,9 +30,14 @@ public class Restaurant implements Serializable {
 
 	private String address;
 
+	@Lob
 	private String description;
 
 	private String email;
+
+	private BigDecimal lat;
+
+	private BigDecimal lon;
 
 	private int medianprice;
 
@@ -36,10 +45,12 @@ public class Restaurant implements Serializable {
 
 	private int phone;
 
+	@Lob
 	private String photo;
 
 	private int type;
 
+	@Lob
 	private String website;
 
 	public Restaurant() {
@@ -75,6 +86,22 @@ public class Restaurant implements Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public BigDecimal getLat() {
+		return this.lat;
+	}
+
+	public void setLat(BigDecimal lat) {
+		this.lat = lat;
+	}
+
+	public BigDecimal getLon() {
+		return this.lon;
+	}
+
+	public void setLon(BigDecimal lon) {
+		this.lon = lon;
 	}
 
 	public int getMedianprice() {
@@ -124,7 +151,5 @@ public class Restaurant implements Serializable {
 	public void setWebsite(String website) {
 		this.website = website;
 	}
-
-
 
 }
