@@ -16,7 +16,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import dao.UserJpaSpring;
 import models.User;
+import models.UserChangePassword;
+import models.UserLoginRequest;
 import service.UserService;
 
 @RestController
@@ -25,6 +28,9 @@ public class UserController {
 	
 	@Autowired
 	UserService user;
+	
+    @Autowired
+    private UserJpaSpring userRepository;
 	
 	@GetMapping(value="user/{id}",produces=MediaType.APPLICATION_JSON_VALUE)
 	public User retrieveUser(@PathVariable("id") int id) {
@@ -102,5 +108,32 @@ public class UserController {
 			return new ResponseEntity<java.util.Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);	
 		}
 	}
+	
+	@PutMapping(value = "/user/password", consumes=MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> updatePassword(@RequestBody UserChangePassword request) {
+
+	    java.util.Map<String, Object> response = new HashMap<>();
+
+	    try {
+	        User userToUpdate = userRepository.findByEmailAndPassword(request.getEmail(), request.getPassword());
+
+	        if (userToUpdate == null) {
+	            response.put("mensaje", "Error: No se pudo autenticar al usuario con el email y contraseña proporcionados");
+	            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+	        }
+	        userToUpdate.setPassword(request.getNewPassword());
+	        user.updateUser(userToUpdate);
+
+	        response.put("message", "La contraseña del usuario ha sido actualizada con éxito");
+	        response.put("Usuario", userToUpdate);
+	        return new ResponseEntity<>(response, HttpStatus.CREATED);
+
+	    } catch (DataAccessException e) {
+	        response.put("message", "Error al actualizar la contraseña en la base de datos");
+	        response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
+	        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
+	}
+
 
 }
