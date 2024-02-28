@@ -48,7 +48,7 @@ public class Restaurant implements Serializable {
 	@Lob
 	private String photo;
 
-	private int type;
+	private String type;
 
 	@Lob
 	private String website;
@@ -136,11 +136,11 @@ public class Restaurant implements Serializable {
 		this.photo = photo;
 	}
 
-	public int getType() {
+	public String getType() {
 		return this.type;
 	}
 
-	public void setType(int type) {
+	public void setType(String type) {
 		this.type = type;
 	}
 
