@@ -10,6 +10,6 @@ import models.Restaurant;
 public interface DishService {
 	List<Dishe>retrieveDishes();
 	List<Dishe> getDishByResId(Integer idRes);
-
+    List<Dishe> getDishesByAllergens(String allergens);
 	List<Dishe> getDishesByAllergens(List<Boolean> allergens);
 }

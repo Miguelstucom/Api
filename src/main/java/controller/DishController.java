@@ -35,21 +35,7 @@ public class DishController {
 
     @GetMapping("/dishes/filter/{allergens}")
     public List<Dishe> getDishesByAllergens(@PathVariable String allergens) {
-        List<Dishe> allDishes = dishservice.retrieveDishes();
-        return allDishes.stream()
-                .filter(dish -> matchesAllergens(dish.getAllergens(), allergens))
-                .collect(Collectors.toList());
+    	return dishservice.getDishesByAllergens(allergens);
     }
 
-    private boolean matchesAllergens(String dishAllergens, String allergens) {
-        for (int i = 0; i < allergens.length(); i++) {
-            char allergenChar = allergens.charAt(i);
-            char dishAllergenChar = dishAllergens.charAt(i);
-
-            if (allergenChar == '1' && dishAllergenChar != '1') {
-                return false;
-            }
-        }
-        return true;
-    }
 }

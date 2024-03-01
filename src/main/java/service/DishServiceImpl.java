@@ -44,5 +44,27 @@ public class DishServiceImpl implements DishService{
         // Verificar si las listas de allergens coinciden
         return dishAllergensList.equals(allergens);
     }
+    
+    @Override
+    public List<Dishe> getDishesByAllergens(String allergens) {
+        if (allergens.chars().allMatch(ch -> ch == '0')) {
+            // Si todos los allergens son 0, devolver todos los platos
+            return retrieveDishes();
+        } else {
+            // Filtrar los platos según los allergens proporcionados
+            return retrieveDishes().stream()
+                    .filter(dish -> !hasMatchingAllergens(dish.getAllergens(), allergens))
+                    .collect(Collectors.toList());
+        }
+    }
+
+    private boolean hasMatchingAllergens(String dishAllergens, String inputAllergens) {
+        for (int i = 0; i < dishAllergens.length(); i++) {
+            if (inputAllergens.charAt(i) == '1' && dishAllergens.charAt(i) == '1') {
+                return true; // Coincidencia en un allergen, se excluye el plato
+            }
+        }
+        return false;
+    }
 
 }
