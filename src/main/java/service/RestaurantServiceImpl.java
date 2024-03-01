@@ -25,7 +25,7 @@ public class RestaurantServiceImpl  implements RestaurantService {
 		List<Restaurant> restaurants = dao.getRestaurants();
 		List<Restaurant> restaurantsFilteret = new ArrayList<Restaurant>();
 		for(int x = 0; x < restaurants.size(); x++) {
-			if(restaurants.get(x).getName().toLowerCase().contains(name.toLowerCase())){
+			if(restaurants.get(x).getName().toLowerCase().contains(name.toLowerCase()) || restaurants.get(x).getType().toLowerCase().contains(name.toLowerCase())){
 				restaurantsFilteret.add(restaurants.get(x));
 			}
 		}
