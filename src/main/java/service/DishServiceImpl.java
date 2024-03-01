@@ -36,22 +36,18 @@ public class DishServiceImpl implements DishService{
     }
 
     private boolean matchesAllergens(String dishAllergens, List<Boolean> allergens) {
-        // Convertir la cadena de allergens del plato a una lista de booleanos
         List<Boolean> dishAllergensList = dishAllergens.chars()
                 .mapToObj(c -> c == '1')
                 .collect(Collectors.toList());
 
-        // Verificar si las listas de allergens coinciden
         return dishAllergensList.equals(allergens);
     }
     
     @Override
     public List<Dishe> getDishesByAllergens(String allergens) {
         if (allergens.chars().allMatch(ch -> ch == '0')) {
-            // Si todos los allergens son 0, devolver todos los platos
             return retrieveDishes();
         } else {
-            // Filtrar los platos según los allergens proporcionados
             return retrieveDishes().stream()
                     .filter(dish -> !hasMatchingAllergens(dish.getAllergens(), allergens))
                     .collect(Collectors.toList());
@@ -61,7 +57,7 @@ public class DishServiceImpl implements DishService{
     private boolean hasMatchingAllergens(String dishAllergens, String inputAllergens) {
         for (int i = 0; i < dishAllergens.length(); i++) {
             if (inputAllergens.charAt(i) == '1' && dishAllergens.charAt(i) == '1') {
-                return true; // Coincidencia en un allergen, se excluye el plato
+                return true;
             }
         }
         return false;
