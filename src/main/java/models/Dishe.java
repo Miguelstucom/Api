@@ -9,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 
 
@@ -34,6 +35,9 @@ public class Dishe implements Serializable {
 	private int idRes;
 
 	private String name;
+
+	@Lob
+	private String photo;
 
 	private String price;
 
@@ -78,6 +82,14 @@ public class Dishe implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getPhoto() {
+		return this.photo;
+	}
+
+	public void setPhoto(String photo) {
+		this.photo = photo;
 	}
 
 	public String getPrice() {
