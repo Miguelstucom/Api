@@ -14,10 +14,9 @@ public class EmailController {
 	public EmailController(EmailService emailService) {this.emailService = emailService;}
 	
     @RequestMapping("/email")
-    public String sendEmail(@RequestParam("recipient") String recipient,
-                            @RequestParam("subject") String subject) {
+    public String sendEmail(@RequestParam("recipient") String recipient) {
 
-        emailService.sendEmail("miguel.stucom@gmail.com",recipient, subject);
+        emailService.sendEmail("miguel.stucom@gmail.com","Inento para añadir restaurante", recipient);
         return "Email test sent";
     }
 
