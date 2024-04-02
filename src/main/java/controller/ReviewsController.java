@@ -39,8 +39,8 @@ public class ReviewsController {
 		java.util.Map<String, Object> response = new HashMap<>();
 		try {
 			rs.addReview(newreview);
-			response.put("message", "El usuario ha sido creado con éxito");
-			response.put("Usuario", review);
+			response.put("message", "La Review ha sido publicada");
+			response.put("Review", review);
 			return new ResponseEntity<java.util.Map<String, Object>>(response, HttpStatus.CREATED);
 		}
 		catch(DataAccessException e) {
