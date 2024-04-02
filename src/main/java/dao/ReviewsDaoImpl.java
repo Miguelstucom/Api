@@ -9,11 +9,17 @@ import models.Review;
 @Repository
 public class ReviewsDaoImpl implements ReviewsDao {
 	@Autowired
-	ReviewsJpaSpring review;
+	ReviewsJpaSpring reviews;
 
 	@Override
 	public List<Review> RetriveReviews(int id) {
-		return review.findByResId(id);
+		return reviews.findByResId(id);
+	}
+
+	@Override
+	public boolean addReview(Review review) {
+		reviews.save(review);
+		return true;
 	}
 
 }

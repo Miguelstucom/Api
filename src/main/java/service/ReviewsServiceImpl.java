@@ -19,4 +19,9 @@ public class ReviewsServiceImpl implements ReviewsService {
 		return dao.RetriveReviews(idRes);
 	}
 
+	@Override
+	public boolean addReview(Review review) {
+		return dao.addReview(review);
+	}
+
 }
