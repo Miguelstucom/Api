@@ -32,8 +32,7 @@ public class AuthController {
 		Map<String, Object> response = new HashMap<>();
 
 
-        User user = userRepository.findByEmailAndPassword(email, password);
-        
+        User user = userRepository.findByEmailAndPassword(email, password);        
         String token = doGenerateToken(user.getId() + "");
         
         response.put("User", user);
