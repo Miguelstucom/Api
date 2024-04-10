@@ -52,7 +52,6 @@ public class UserController {
 			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
 			return new ResponseEntity<java.util.Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		
 	}
 	
 	@PutMapping(value = "/user", consumes=MediaType.APPLICATION_JSON_VALUE)
