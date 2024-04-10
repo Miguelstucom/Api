@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import dao.UserJpaSpring;
 import models.User;
@@ -133,6 +135,22 @@ public class UserController {
 	        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 	    }
 	}
+	
+	@PostMapping("/{userId}/uploadImage")
+    public ResponseEntity<String> uploadUserImage(@PathVariable Integer userId, @RequestParam("image") MultipartFile file) {
+        try {
+            User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+            user.setImage(file.getBytes());
+            userRepository.save(user);
+
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("Imagen subida con éxito para el usuario: " + user.getName());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al subir la imagen: " + e.getMessage());
+        }
+    }
 
 
 }
