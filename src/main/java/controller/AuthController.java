@@ -34,6 +34,10 @@ public class AuthController {
 
         User user = userRepository.findByEmailAndPassword(email, password);
         
+        if (user == null) {
+        	return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
+        }
+        
         String token = doGenerateToken(user.getId() + "");
         
         response.put("User", user);
