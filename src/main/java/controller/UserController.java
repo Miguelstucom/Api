@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import Exceptions.EmailAlreadyExistsException;
 import dao.UserJpaSpring;
 import models.User;
 import models.UserChangePassword;
@@ -42,16 +43,24 @@ public class UserController {
 		User usr = newuser;
 		java.util.Map<String, Object> response = new HashMap<>();
 		try {
+			System.out.println(user.findByEmail(usr.getEmail()));
+			if(user.findByEmail(usr.getEmail()) != null) {
+                throw new EmailAlreadyExistsException("Este correo ya ha sido utilizado");
+			}
+			System.out.println(newuser);
 			user.addUser(newuser);
 			response.put("message", "El usuario ha sido creado con éxito");
 			response.put("Usuario", usr);
 			return new ResponseEntity<java.util.Map<String, Object>>(response, HttpStatus.CREATED);
-		}
-		catch(DataAccessException e) {
+		} catch(DataAccessException e) {
 			response.put("message","Error");
 			response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
 			return new ResponseEntity<java.util.Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+		} catch (EmailAlreadyExistsException e) {
+            response.put("message", "Error al crear el usuario");
+            response.put("error", e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
 		
 	}
 	

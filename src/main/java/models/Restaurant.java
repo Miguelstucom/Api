@@ -152,4 +152,13 @@ public class Restaurant implements Serializable {
 		this.website = website;
 	}
 
+	@Override
+	public String toString() {
+		return "Restaurant [id=" + id + ", address=" + address + ", description=" + description + ", email=" + email
+				+ ", lat=" + lat + ", lon=" + lon + ", medianprice=" + medianprice + ", name=" + name + ", phone="
+				+ phone + ", photo=" + photo + ", type=" + type + ", website=" + website + "]";
+	}
+	
+	
+
 }

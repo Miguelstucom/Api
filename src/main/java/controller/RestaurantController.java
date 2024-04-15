@@ -55,11 +55,12 @@ public class RestaurantController {
 	
 	public ResponseEntity<?> create(@RequestBody Restaurant rest) {
 		Restaurant newRes = rest;
+		System.out.println(rest.toString());
 		java.util.Map<String, Object> response = new HashMap<>();
 		try {
 			wsrestaurant.addRestaurant(rest);
 			response.put("message", "El restaurante ha sido creado con éxito");
-			response.put("Usuario", newRes);
+			response.put("Restaurante", newRes);
 			return new ResponseEntity<java.util.Map<String, Object>>(response, HttpStatus.CREATED);
 		}
 		catch(DataAccessException e){
