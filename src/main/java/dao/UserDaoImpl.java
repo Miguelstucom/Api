@@ -39,4 +39,9 @@ public class UserDaoImpl implements UserDao {
 		return false;
 	}
 
+	@Override
+	public User findByEmail(String mail) {
+		// TODO Auto-generated method stub
+		return user.findByEmail(mail);
+	}
 }

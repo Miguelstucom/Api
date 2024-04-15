@@ -11,4 +11,5 @@ public interface UserDao {
 	void updateUser(User res);
 	boolean deleteUser(int idRes);
 	User retrieveUser(int id);
+	User findByEmail(String mail);
 }

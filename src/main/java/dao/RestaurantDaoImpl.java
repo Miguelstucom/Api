@@ -21,11 +21,13 @@ public class RestaurantDaoImpl implements RestaurantDao  {
 	}
 	@Override
 	public boolean addRestaurant(Restaurant res) {
-		if(restaurant.findById(res.getId()) == null) {
+//		if(restaurant.findById(res.getId()) == null) {
+			
 			restaurant.save(res);
+			System.out.println(res);
 			return true;
-		}
-		return false;
+//		}
+//		return false;
 	}
 	@Override
 	public void updateRestaurant(Restaurant res) {

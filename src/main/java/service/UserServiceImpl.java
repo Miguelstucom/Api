@@ -19,7 +19,6 @@ public class UserServiceImpl implements UserService {
 		return dao.retrieveUser(id);
 	}
 	
-	
 	@Override
 	public boolean addUser(User res) {
 		return dao.addUser(res);
@@ -34,6 +33,12 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public boolean deleteUser(int idRes) {
 		return dao.deleteUser(idRes);
+	}
+	
+	@Override
+	public User findByEmail(String email) {
+		// TODO Auto-generated method stub
+		return dao.findByEmail(email);
 	}
 	
 
