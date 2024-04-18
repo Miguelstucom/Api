@@ -24,6 +24,18 @@ public class EmailService {
 		mailSender.send(message);
 	}
 	
+	public void reservationEmail(String to, String subject, String body) {
+		
+		SimpleMailMessage message = new SimpleMailMessage();
+		
+		message.setFrom("miguel.stucom@gmail.com");
+		message.setTo("foodieguardcontact@gmail.com");
+		message.setSubject(subject);
+		message.setText(body);
+		
+		mailSender.send(message);
+	}
+	
 	
 
 }
