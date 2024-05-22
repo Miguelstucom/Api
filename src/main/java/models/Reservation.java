@@ -33,6 +33,9 @@ public class Reservation implements Serializable {
 
 	@Column(name="id_res")
 	private int idRes;
+	
+	@Column(name="id_user")
+	private int idUser;
 
 	public Reservation() {
 	}
@@ -59,6 +62,14 @@ public class Reservation implements Serializable {
 
 	public void setIdRes(int idRes) {
 		this.idRes = idRes;
+	}
+	
+	public int getIdUser() {
+		return this.idUser;
+	}
+
+	public void setIdUser(int idUser) {
+		this.idUser = idUser;
 	}
 
 }

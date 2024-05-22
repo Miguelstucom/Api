@@ -20,4 +20,10 @@ public class ReservationServiceImpl implements ReservationService {
 		return dao.getReservationByResId(idRes);
 	}
 
+	@Override
+	public List<Reservation> getReservationByUserId(Integer idUser) {
+		// TODO Auto-generated method stub
+		return dao.getReservationByUserId(idUser);
+	}
+
 }

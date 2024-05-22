@@ -24,5 +24,10 @@ public class ReservationController {
 	public List<Reservation>retrieveDishesbyId(@PathVariable("idRes") Integer idRes){
 		return reservationservice.getReservationByResId(idRes);
 	}
+	
+	@GetMapping(value="reservationbyuser/{idUser}",produces=MediaType.APPLICATION_JSON_VALUE)
+	public List<Reservation>retrieveReservationbyId(@PathVariable("idUser") Integer idUser){
+		return reservationservice.getReservationByUserId(idUser);
+	}
 
 }
