@@ -17,6 +17,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import models.User;
 import models.UserLoginRequest;
+import models.tokenRequest;
 
 @RestController
 public class AuthController {
@@ -58,7 +59,10 @@ public class AuthController {
 	}
 
 
-	public Boolean validateInfoUsu(String token, String infoUsu) {
+	@PostMapping("/api/viewToken")
+	public Boolean validateInfoUsu(@RequestBody tokenRequest data) {
+		String token = data.getToken();
+		String infoUsu = data.getUser();
 		final String infoUsuToken = getClaimFromToken(token, Claims::getSubject);
 		return (infoUsu.equals(infoUsuToken));
 	}
@@ -67,7 +71,7 @@ public class AuthController {
 		final Claims claims = getAllClaimsFromToken(token);
 		return claimsResolver.apply(claims);
 	}
-
+	
 	private Claims getAllClaimsFromToken(String token) {
 		return Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
 	}
