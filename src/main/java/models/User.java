@@ -34,6 +34,8 @@ public class User implements Serializable {
 	private String password;
 
 	private String surname;
+	
+	private int premium;
 
 	public User() {
 	}
@@ -84,6 +86,14 @@ public class User implements Serializable {
 
 	public void setSurname(String surname) {
 		this.surname = surname;
+	}
+	
+	public int getPremium() {
+		return this.premium;
+	}
+
+	public void setPremium(int premium) {
+		this.premium = premium;
 	}
 
 }

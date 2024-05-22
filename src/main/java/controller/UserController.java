@@ -1,6 +1,7 @@
 package controller;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -95,6 +96,34 @@ public class UserController {
 			return new ResponseEntity<java.util.Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);	
 		}
 		
+	}
+	
+	@PutMapping(value = "/user/{userId}/premium")
+	public ResponseEntity<?> togglePremiumStatus(@PathVariable("userId") int userId) {
+	    Map<String, Object> response = new HashMap<>();
+
+	    try {
+	        User userToUpdate = userRepository.findById(userId).orElse(null);
+
+	        if (userToUpdate == null) {
+	            response.put("message", "Error: No se encontró el usuario con el ID proporcionado");
+	            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+	        }
+
+	        // Toggle the premium status
+	        int currentPremiumStatus = userToUpdate.getPremium();
+	        userToUpdate.setPremium(currentPremiumStatus == 0 ? 1 : 0);
+	        userRepository.save(userToUpdate);
+
+	        response.put("message", "El estado premium del usuario ha sido cambiado con éxito");
+	        response.put("Usuario", userToUpdate);
+	        return new ResponseEntity<>(response, HttpStatus.OK);
+
+	    } catch (DataAccessException e) {
+	        response.put("message", "Error al actualizar el estado premium en la base de datos");
+	        response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
+	        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
 	}
 	
 	@DeleteMapping("/user/{id}")
