@@ -9,4 +9,5 @@ import models.Reservation;
 @Service
 public interface ReservationDao {
 	List<Reservation> getReservationByResId(Integer idRes);
+	List<Reservation> getReservationByUserId(Integer idUser);
 }

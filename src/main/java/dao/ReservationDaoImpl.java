@@ -17,4 +17,10 @@ public class ReservationDaoImpl implements ReservationDao{
 		return reservation.findByResId(idRes);
 	}
 
+	@Override
+	public List<Reservation> getReservationByUserId(Integer idUser) {
+		// TODO Auto-generated method stub
+		return reservation.findByUserId(idUser);
+	}
+
 }
