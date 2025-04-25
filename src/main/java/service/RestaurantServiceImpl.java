@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import dao.RestaurantDao;
@@ -15,21 +17,22 @@ public class RestaurantServiceImpl  implements RestaurantService {
 	RestaurantDao dao;
 
 	@Override
-	public List<Restaurant> retrieveRestaurant() {
+	public Page<Restaurant> retrieveRestaurant(Pageable pageRest) {
 		// TODO Auto-generated method stub
-		return dao.getRestaurants();
+		return dao.getRestaurants(pageRest);
 	}
 
 	@Override
 	public List<Restaurant> restaurantFiltered(String name){
-		List<Restaurant> restaurants = dao.getRestaurants();
-		List<Restaurant> restaurantsFilteret = new ArrayList<Restaurant>();
-		for(int x = 0; x < restaurants.size(); x++) {
-			if(restaurants.get(x).getName().toLowerCase().contains(name.toLowerCase()) || restaurants.get(x).getType().toLowerCase().contains(name.toLowerCase()) || restaurants.get(x).getAddress().toLowerCase().contains(name.toLowerCase())){
-				restaurantsFilteret.add(restaurants.get(x));
-			}
-		}
-		return restaurantsFilteret;
+//		List<Restaurant> restaurants = dao.getRestaurants();
+//		List<Restaurant> restaurantsFilteret = new ArrayList<Restaurant>();
+//		for(int x = 0; x < restaurants.size(); x++) {
+//			if(restaurants.get(x).getName().toLowerCase().contains(name.toLowerCase()) || restaurants.get(x).getType().toLowerCase().contains(name.toLowerCase()) || restaurants.get(x).getAddress().toLowerCase().contains(name.toLowerCase())){
+//				restaurantsFilteret.add(restaurants.get(x));
+//			}
+//		}
+//		return restaurantsFilteret;
+		return List.of(null);
 	}
 
 	@Override

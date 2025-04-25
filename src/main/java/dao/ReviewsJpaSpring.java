@@ -10,7 +10,7 @@ import models.Dishe;
 import models.Review;
 import models.User;
 
-public interface ReviewsJpaSpring  extends JpaRepository<Review, Long>{
+public interface ReviewsJpaSpring  extends JpaRepository<Review, Integer>{
 	@Query("SELECT r FROM Review r WHERE r.idRes = :idRes")
 	List<Review> findByResId(@Param("idRes") Integer idRes);
 }

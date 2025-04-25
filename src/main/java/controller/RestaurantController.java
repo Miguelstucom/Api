@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -36,8 +38,8 @@ public class RestaurantController {
 	RestaurantService wsrestaurant;
 	
 	@GetMapping(value="restaurant",produces=MediaType.APPLICATION_JSON_VALUE)
-	public List<Restaurant>retrieveUsers(){
-		return wsrestaurant.retrieveRestaurant();
+	public Page<Restaurant>retrieveUsers(Pageable pageRest){
+		return wsrestaurant.retrieveRestaurant(pageRest);
 		
 	}
 

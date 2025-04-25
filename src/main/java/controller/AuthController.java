@@ -7,6 +7,7 @@ import java.util.function.Function;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +21,7 @@ import models.UserLoginRequest;
 import models.tokenRequest;
 
 @RestController
+@CrossOrigin("http://localhost:3000")
 public class AuthController {
 
     @Autowired
@@ -56,6 +58,30 @@ public class AuthController {
 				.setIssuedAt(new Date(System.currentTimeMillis()))
 				.setExpiration(new Date(System.currentTimeMillis() + 100 * 60 * 60 * 10))
 				.signWith(SignatureAlgorithm.HS256, key).compact();
+	}
+
+	
+	@PostMapping("/api/checkUser")
+	public ResponseEntity<?> getUserFromToken(@RequestBody tokenRequest data) {
+	    try {
+	        String token = data.getToken();
+	        String userIdFromToken = getClaimFromToken(token, Claims::getSubject);
+
+	        User user = userRepository.findById(Integer.parseInt(userIdFromToken)).orElse(null);
+
+	        if (user == null) {
+	            return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
+	        }
+
+	        // Puedes devolver solo los datos necesarios
+	        Map<String, Object> response = new HashMap<>();
+	        response.put("nombre", user.getName());
+	        response.put("email", user.getEmail());
+
+	        return new ResponseEntity<>(response, HttpStatus.OK);
+	    } catch (Exception e) {
+	        return new ResponseEntity<>("Token inválido o error al procesar", HttpStatus.BAD_REQUEST);
+	    }
 	}
 
 
