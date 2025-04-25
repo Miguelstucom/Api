@@ -13,5 +13,5 @@ public interface DishService {
 	Page<Dishe>retrieveDishes(Pageable pageDish);
 	List<Dishe> getDishByResId(Integer idRes);
     Page<Dishe> getDishesByAllergens(String allergens, Pageable pageDishFilter);
-	Page<Dishe> getDishesByAllergens(Page<Boolean> allergens, Pageable pageDishFilter);
+	Page<Dishe> getDishesByAllergens(List<Boolean> allergens, Pageable pageDishFilter);
 }

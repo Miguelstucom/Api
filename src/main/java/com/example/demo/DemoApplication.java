@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 
-@ComponentScan(basePackages = {"controller","dao","service"})
+@ComponentScan(basePackages = {"controller","dao","service","config"})
 @EntityScan(basePackages = {"models"})
 @EnableJpaRepositories(basePackages = {"dao"})
 @SpringBootApplication

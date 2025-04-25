@@ -7,6 +7,7 @@ import java.util.function.Function;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,13 +21,16 @@ import models.User;
 import models.UserLoginRequest;
 import models.tokenRequest;
 
+
 @RestController
 @CrossOrigin("http://localhost:3000")
 public class AuthController {
 
     @Autowired
     private UserJpaSpring userRepository;
-
+    
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
         
     @PostMapping("/api/login")
     public ResponseEntity<?> login(@RequestBody UserLoginRequest userLoginRequest ) {
@@ -34,14 +38,16 @@ public class AuthController {
         String password = userLoginRequest.getPassword();
 		Map<String, Object> response = new HashMap<>();
 
-
-
-        User user = userRepository.findByEmailAndPassword(email, password);
+        User user = userRepository.findByEmail(email);
         
         if (user == null) {
         	return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
+        }else 
+        
+        if(!passwordEncoder.matches(password, user.getPassword())) {
+        	return new ResponseEntity<>("error", HttpStatus.NOT_FOUND);
         }
-
+        
         String token = doGenerateToken(user.getId() + "");
         
         response.put("User", user);
@@ -100,6 +106,5 @@ public class AuthController {
 	
 	private Claims getAllClaimsFromToken(String token) {
 		return Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
-	}
-	
+	}	
 }

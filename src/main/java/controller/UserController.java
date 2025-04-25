@@ -8,6 +8,8 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +25,6 @@ import Exceptions.EmailAlreadyExistsException;
 import dao.UserJpaSpring;
 import models.User;
 import models.UserChangePassword;
-import models.UserLoginRequest;
 import service.UserService;
 
 @RestController
@@ -35,6 +36,10 @@ public class UserController {
 	
     @Autowired
     private UserJpaSpring userRepository;
+    
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
 	
 	@GetMapping(value="user/{id}",produces=MediaType.APPLICATION_JSON_VALUE)
 	public User retrieveUser(@PathVariable("id") int id) {
@@ -51,6 +56,10 @@ public class UserController {
                 throw new EmailAlreadyExistsException("Este correo ya ha sido utilizado");
 			}
 			System.out.println(newuser);
+			
+			String encodedPassword = passwordEncoder.encode(newuser.getPassword());
+	        newuser.setPassword(encodedPassword);
+			
 			user.addUser(newuser);
 			response.put("message", "El usuario ha sido creado con éxito");
 			response.put("Usuario", usr);
@@ -76,6 +85,9 @@ public class UserController {
 			response.put("mensaje", "Error: no se pudo editar, el User ID: " + updatedUser.getId() + "no existe en la base de datos");
 			return new ResponseEntity<java.util.Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);	
 		}
+		
+		String encodedPassword = passwordEncoder.encode(updatedUser.getPassword());
+        updatedUser.setPassword(encodedPassword);
 		
 		user.updateUser(updatedUser);
 		
@@ -189,6 +201,5 @@ public class UserController {
                     .body("Error al subir la imagen: " + e.getMessage());
         }
     }
-
 
 }
