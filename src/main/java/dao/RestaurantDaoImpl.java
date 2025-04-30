@@ -19,6 +19,11 @@ public class RestaurantDaoImpl implements RestaurantDao  {
 	}
 	
 	@Override
+	public List<Restaurant> getRestaurants() {
+		return restaurant.findAll();
+	}
+	
+	@Override
 	public Restaurant retrieveRestaurant(int id) {
 		return restaurant.findById(id).orElse(null);
 	}

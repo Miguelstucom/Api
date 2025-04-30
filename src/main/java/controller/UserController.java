@@ -1,5 +1,9 @@
 package controller;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,11 +28,15 @@ import org.springframework.web.multipart.MultipartFile;
 
 import Exceptions.EmailAlreadyExistsException;
 import dao.UserJpaSpring;
+import io.jsonwebtoken.Claims;
 import models.User;
 import models.UserChangePassword;
+import models.changePasswordRequest;
+import models.tokenRequest;
 import service.UserService;
 
 @RestController
+@CrossOrigin("http://localhost:3000")
 @RequestMapping("/api")
 public class UserController {
 	
@@ -38,31 +47,36 @@ public class UserController {
     private UserJpaSpring userRepository;
     
     @Autowired
+    private AuthController authController;
+    
+    @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
 	
-	@GetMapping(value="user/{id}",produces=MediaType.APPLICATION_JSON_VALUE)
-	public User retrieveUser(@PathVariable("id") int id) {
-		return user.retrieveUser(id);
-	}
+//	@GetMapping(value="user/{id}",produces=MediaType.APPLICATION_JSON_VALUE)
+//	public User retrieveUser(@PathVariable("id") int id) {
+//		return user.retrieveUser(id);
+//	}
 	
 	@PostMapping("/user")
-	public ResponseEntity<?> createUser(@RequestBody User newuser){
+	public ResponseEntity<?> createUser(@RequestBody User newuser) throws IOException{
 		User usr = newuser;
 		java.util.Map<String, Object> response = new HashMap<>();
 		try {
-			System.out.println(user.findByEmail(usr.getEmail()));
 			if(user.findByEmail(usr.getEmail()) != null) {
                 throw new EmailAlreadyExistsException("Este correo ya ha sido utilizado");
 			}
-			System.out.println(newuser);
+			
+			byte[] defaultImage = loadDefaultImage();
+			newuser.setImage(defaultImage);
+			
 			
 			String encodedPassword = passwordEncoder.encode(newuser.getPassword());
 	        newuser.setPassword(encodedPassword);
 			
 			user.addUser(newuser);
 			response.put("message", "El usuario ha sido creado con éxito");
-			response.put("Usuario", usr);
+//			response.put("Usuario", usr);
 			return new ResponseEntity<java.util.Map<String, Object>>(response, HttpStatus.CREATED);
 		} catch(DataAccessException e) {
 			response.put("message","Error");
@@ -75,29 +89,61 @@ public class UserController {
         }
 	}
 	
-	@PutMapping(value = "/user", consumes=MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> updateUser(@RequestBody User updatedUser) {
+	@PostMapping("/userRetrieve")
+	public ResponseEntity<?> retrieveUser(@RequestBody tokenRequest data){
+		try {
+	        String token = data.getToken();
+	        String userIdFromToken = authController.getClaimFromToken(token, Claims::getSubject);
 
-		User newUser = new User();
+	        User user = userRepository.findById(Integer.parseInt(userIdFromToken)).orElse(null);
+
+	        if (user == null) {
+	            return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
+	        }
+	        String imagenBase64 = Base64.getEncoder().encodeToString(user.getImage());
+
+	        Map<String, Object> response = new HashMap<>();
+	        response.put("name", user.getName());
+	        response.put("surname", user.getSurname());
+	        response.put("email", user.getEmail());
+	        response.put("image", imagenBase64);
+
+	        return new ResponseEntity<>(response, HttpStatus.OK);
+	    } catch (Exception e) {
+	        return new ResponseEntity<>("Token inválido o error al procesar", HttpStatus.BAD_REQUEST);
+	    }
+	}
+	
+	@PutMapping(value = "/user", consumes=MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> updateUser(@RequestBody changePasswordRequest updatedUser) {
+		
 		java.util.Map<String, Object> response = new HashMap<>();		
 		
-		if(user.retrieveUser(updatedUser.getId())==null) {
-			response.put("mensaje", "Error: no se pudo editar, el User ID: " + updatedUser.getId() + "no existe en la base de datos");
-			return new ResponseEntity<java.util.Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);	
-		}
-		
-		String encodedPassword = passwordEncoder.encode(updatedUser.getPassword());
-        updatedUser.setPassword(encodedPassword);
-		
-		user.updateUser(updatedUser);
-		
 		try {
-			newUser.setName(updatedUser.getName());
-			newUser.setEmail(updatedUser.getEmail());
-			newUser.setPassword(updatedUser.getPassword());
-			newUser.setEmail(updatedUser.getEmail());
+	
+			String token = updatedUser.getToken();
+			String lastpassword = updatedUser.getLastpassword();
+			String newpassword = updatedUser.getNewpassword();
 			
-			user.updateUser(updatedUser);
+			
+			System.out.println("last: " + lastpassword + " | New: " + newpassword);
+	        String userIdFromToken = authController.getClaimFromToken(token, Claims::getSubject);
+	        
+	        User userUpdated = userRepository.findById(Integer.parseInt(userIdFromToken)).orElse(null);
+	
+	        if (user == null) {
+	            return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
+	        }
+	        
+	        if(!passwordEncoder.matches(lastpassword, userUpdated.getPassword())) {
+	        	return new ResponseEntity<>("error, la contraseña no es correcta", HttpStatus.NOT_FOUND);
+	    	}
+	        
+			String encodedPassword = passwordEncoder.encode(newpassword);
+			userUpdated.setPassword(encodedPassword);
+	
+	        user.updateUser(userUpdated);
+					
 			response.put("message", "El usuario ha sido actualizado con éxito");
 			response.put("Usuario", updatedUser);
 			return new ResponseEntity<java.util.Map<String, Object>>(response, HttpStatus.CREATED);
@@ -201,5 +247,13 @@ public class UserController {
                     .body("Error al subir la imagen: " + e.getMessage());
         }
     }
+	
+	private byte[] loadDefaultImage() throws IOException {
+	    InputStream is = getClass().getClassLoader().getResourceAsStream("assets/image-user.png");
+	    if (is == null) {
+	        throw new IOException("Default avatar not found!");
+	    }
+	    return is.readAllBytes();
+	}
 
 }

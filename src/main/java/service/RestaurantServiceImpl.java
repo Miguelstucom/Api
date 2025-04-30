@@ -21,6 +21,10 @@ public class RestaurantServiceImpl  implements RestaurantService {
 		// TODO Auto-generated method stub
 		return dao.getRestaurants(pageRest);
 	}
+	public List<Restaurant> retrieveRestaurant() {
+		// TODO Auto-generated method stub
+		return dao.getRestaurants();
+	}
 
 	@Override
 	public List<Restaurant> restaurantFiltered(String name){

@@ -42,6 +42,11 @@ public class RestaurantController {
 		return wsrestaurant.retrieveRestaurant(pageRest);
 		
 	}
+	
+	@GetMapping(value="Allrestaurant",produces=MediaType.APPLICATION_JSON_VALUE)
+	public List<Restaurant>retrieveUsers1(){
+		return wsrestaurant.retrieveRestaurant();
+	}
 
 	@GetMapping(value="restaurant/name/{name}",produces=MediaType.APPLICATION_JSON_VALUE)
 	public List<Restaurant>searchRestaurant(@PathVariable("name") String name){

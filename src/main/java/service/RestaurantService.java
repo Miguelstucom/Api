@@ -11,7 +11,8 @@ public interface RestaurantService {
 	boolean addRestaurant(Restaurant res);
 	void updateRestaurant(Restaurant res);
 	boolean deleteRestaurant(int idRes);
-	Page <Restaurant> retrieveRestaurant(Pageable pageRest);
+	Page <Restaurant> retrieveRestaurant(Pageable pageRest);	
+	List <Restaurant> retrieveRestaurant();
 	List <Restaurant> restaurantFiltered(String name);
 	Restaurant retrieveRestaurant(int restaurant);
 }

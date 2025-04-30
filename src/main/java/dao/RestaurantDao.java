@@ -14,5 +14,6 @@ public interface RestaurantDao {
 	void updateRestaurant(Restaurant res);
 	boolean deleteRestaurant(int idRes);
 	Page<Restaurant>getRestaurants(Pageable pageRest);
+	List<Restaurant>getRestaurants();
 	Restaurant retrieveRestaurant(int id);
 }

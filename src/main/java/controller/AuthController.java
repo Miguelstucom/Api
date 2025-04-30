@@ -42,15 +42,15 @@ public class AuthController {
         
         if (user == null) {
         	return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
-        }else 
-        
-        if(!passwordEncoder.matches(password, user.getPassword())) {
-        	return new ResponseEntity<>("error", HttpStatus.NOT_FOUND);
         }
+        	    
+    	if(!passwordEncoder.matches(password, user.getPassword())) {
+        	return new ResponseEntity<>("error", HttpStatus.NOT_FOUND);
+    	}
         
         String token = doGenerateToken(user.getId() + "");
         
-        response.put("User", user);
+//        response.put("User", user);
         response.put("Token", token);
 
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
@@ -79,7 +79,6 @@ public class AuthController {
 	            return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
 	        }
 
-	        // Puedes devolver solo los datos necesarios
 	        Map<String, Object> response = new HashMap<>();
 	        response.put("nombre", user.getName());
 	        response.put("email", user.getEmail());
