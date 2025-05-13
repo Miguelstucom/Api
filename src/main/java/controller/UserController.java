@@ -36,7 +36,7 @@ import models.tokenRequest;
 import service.UserService;
 
 @RestController
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin(origins = {"http://10.30.212.6", "http://192.168.10.20"})
 @RequestMapping("/api")
 public class UserController {
 	

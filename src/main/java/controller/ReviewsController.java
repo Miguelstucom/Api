@@ -3,6 +3,7 @@ package controller;
 import java.util.HashMap;
 import java.util.List;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,7 @@ import service.RestaurantService;
 import service.ReviewsService;
 
 @RestController
+@CrossOrigin(origins = {"http://10.30.212.6", "http://192.168.10.20"})
 @RequestMapping("/api")
 public class ReviewsController {
 	
