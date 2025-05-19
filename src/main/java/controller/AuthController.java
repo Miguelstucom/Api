@@ -23,7 +23,7 @@ import models.tokenRequest;
 
 
 @RestController
-@CrossOrigin(origins = {"http://10.30.212.6", "http://192.168.10.20"})
+@CrossOrigin(origins = {"http://10.30.212.235", "http://192.168.10.20"})
 public class AuthController {
 
     @Autowired
