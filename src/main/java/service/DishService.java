@@ -2,14 +2,16 @@ package service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import models.Dishe;
 import models.Restaurant;
 
 public interface DishService {
-	List<Dishe>retrieveDishes();
+	Page<Dishe>retrieveDishes(Pageable pageDish);
 	List<Dishe> getDishByResId(Integer idRes);
-    List<Dishe> getDishesByAllergens(String allergens);
-	List<Dishe> getDishesByAllergens(List<Boolean> allergens);
+    Page<Dishe> getDishesByAllergens(String allergens, Pageable pageDishFilter);
+	Page<Dishe> getDishesByAllergens(List<Boolean> allergens, Pageable pageDishFilter);
 }

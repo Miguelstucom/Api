@@ -7,6 +7,8 @@ import java.util.function.Function;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,12 +21,16 @@ import models.User;
 import models.UserLoginRequest;
 import models.tokenRequest;
 
+
 @RestController
+@CrossOrigin(origins = {"http://10.30.212.235", "http://192.168.10.20"})
 public class AuthController {
 
     @Autowired
     private UserJpaSpring userRepository;
-
+    
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
         
     @PostMapping("/api/login")
     public ResponseEntity<?> login(@RequestBody UserLoginRequest userLoginRequest ) {
@@ -32,17 +38,19 @@ public class AuthController {
         String password = userLoginRequest.getPassword();
 		Map<String, Object> response = new HashMap<>();
 
-
-
-        User user = userRepository.findByEmailAndPassword(email, password);
+        User user = userRepository.findByEmail(email);
         
         if (user == null) {
         	return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
         }
-
+        	    
+    	if(!passwordEncoder.matches(password, user.getPassword())) {
+        	return new ResponseEntity<>("error", HttpStatus.NOT_FOUND);
+    	}
+        
         String token = doGenerateToken(user.getId() + "");
         
-        response.put("User", user);
+//        response.put("User", user);
         response.put("Token", token);
 
             return new ResponseEntity<Map<String, Object>>(response, HttpStatus.OK);
@@ -56,6 +64,29 @@ public class AuthController {
 				.setIssuedAt(new Date(System.currentTimeMillis()))
 				.setExpiration(new Date(System.currentTimeMillis() + 100 * 60 * 60 * 10))
 				.signWith(SignatureAlgorithm.HS256, key).compact();
+	}
+
+	
+	@PostMapping("/api/checkUser")
+	public ResponseEntity<?> getUserFromToken(@RequestBody tokenRequest data) {
+	    try {
+	        String token = data.getToken();
+	        String userIdFromToken = getClaimFromToken(token, Claims::getSubject);
+
+	        User user = userRepository.findById(Integer.parseInt(userIdFromToken)).orElse(null);
+
+	        if (user == null) {
+	            return new ResponseEntity<>("Usuario no encontrado", HttpStatus.NOT_FOUND);
+	        }
+
+	        Map<String, Object> response = new HashMap<>();
+	        response.put("nombre", user.getName());
+	        response.put("email", user.getEmail());
+
+	        return new ResponseEntity<>(response, HttpStatus.OK);
+	    } catch (Exception e) {
+	        return new ResponseEntity<>("Token inválido o error al procesar", HttpStatus.BAD_REQUEST);
+	    }
 	}
 
 
@@ -74,6 +105,5 @@ public class AuthController {
 	
 	private Claims getAllClaimsFromToken(String token) {
 		return Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
-	}
-	
+	}	
 }

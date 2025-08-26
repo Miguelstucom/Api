@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +30,7 @@ import service.UserService;
 
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {"http://10.30.212.235", "http://192.168.10.20"})
 @RequestMapping("/api")
 public class RestaurantController {
 	
@@ -36,9 +38,14 @@ public class RestaurantController {
 	RestaurantService wsrestaurant;
 	
 	@GetMapping(value="restaurant",produces=MediaType.APPLICATION_JSON_VALUE)
-	public List<Restaurant>retrieveUsers(){
-		return wsrestaurant.retrieveRestaurant();
+	public Page<Restaurant>retrieveUsers(Pageable pageRest){
+		return wsrestaurant.retrieveRestaurant(pageRest);
 		
+	}
+	
+	@GetMapping(value="Allrestaurant",produces=MediaType.APPLICATION_JSON_VALUE)
+	public List<Restaurant>retrieveUsers1(){
+		return wsrestaurant.retrieveRestaurant();
 	}
 
 	@GetMapping(value="restaurant/name/{name}",produces=MediaType.APPLICATION_JSON_VALUE)

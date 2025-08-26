@@ -3,6 +3,8 @@ package dao;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import models.Restaurant;
@@ -10,11 +12,17 @@ import models.Restaurant;
 public class RestaurantDaoImpl implements RestaurantDao  {
 	@Autowired
 	RestaurantJpaSpring restaurant;
-	@Override
 	
+	@Override
+	public Page<Restaurant> getRestaurants(Pageable pageRest) {
+		return restaurant.findAll(pageRest);
+	}
+	
+	@Override
 	public List<Restaurant> getRestaurants() {
 		return restaurant.findAll();
 	}
+	
 	@Override
 	public Restaurant retrieveRestaurant(int id) {
 		return restaurant.findById(id).orElse(null);
